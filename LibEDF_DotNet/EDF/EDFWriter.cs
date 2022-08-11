@@ -35,12 +35,23 @@ namespace LibEDF_DotNet
             WriteItem(edf.Signals.Select(s => s.DigitalMinimum));
             WriteItem(edf.Signals.Select(s => s.DigitalMaximum));
             WriteItem(edf.Signals.Select(s => s.Prefiltering));
-            WriteItem(edf.Signals.Select(s => s.NumberOfSamples));
+            WriteItem(edf.Signals.Select(s => edf.Header.NumberOfSamplesInDataRecord));
             WriteItem(edf.Signals.Select(s => s.Reserved));
 
             Console.WriteLine("Writer position after header: " + BaseStream.Position);
             Console.WriteLine("Writing signals.");
-            foreach (var sig in edf.Signals) WriteSignal(sig);
+            //foreach (var sig in edf.Signals) WriteSignal(sig);
+            //int fsample = edf.Header.NumberOfSamplesInDataRecord/edf.Header.DurationOfDataRecord
+            Console.WriteLine("Write position before signal: " + this.BaseStream.Position);
+            for (int iRecord = 0; iRecord < edf.Header.NumberOfDataRecords; iRecord++)
+            {
+                foreach (var signal in edf.Signals) 
+                {
+                    chunk_signal = signal.Samples.Skip(iRecord*edf.Header.NumberOfSamplesInDataRecord).Take(edf.Header.NumberOfSamplesInDataRecord).ToArray()
+                    foreach (short sample in chunk_signal) this.Write(BitConverter.GetBytes(sample);
+                }
+            }
+            Console.WriteLine("Write position after signal: " + this.BaseStream.Position);
 
             Close();
             Console.WriteLine("File size: " + File.ReadAllBytes(edfFilePath).Length);
