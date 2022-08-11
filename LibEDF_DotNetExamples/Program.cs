@@ -39,14 +39,16 @@ namespace LibEDF_DotNetExamples
 
             //Create the header object
             var h = new EDFHeader();
-            h.DurationOfDataRecord.Value = 1;
+            
             h.Version.Value = "0";
             h.PatientID.Value = "TEST PATIENT ID";
             h.RecordID.Value = "TEST RECORD ID";
             h.StartDate.Value = "11.11.16"; //dd.mm.yy
             h.StartTime.Value = "12.12.12"; //hh.mm.ss
             h.Reserved.Value = "RESERVED";
-            h.NumberOfDataRecords.Value = 1;
+            h.DurationOfDataRecord.Value = 1;
+            h.NumberOfDataRecords.Value = 29990; // actual number of seconds in the recording.
+            h.NumberOfSamplesInDataRecord = 256; // reflecting 1 second of DurationOfDataRecord as 256 with samping rate of 256 Hz
             h.NumberOfSignals.Value = (short)edfFile.Signals.Length;
             h.SignalsReserved.Value = Enumerable.Repeat("RESERVED".PadRight(32, ' '),
                                                 h.NumberOfSignals.Value).ToArray();
