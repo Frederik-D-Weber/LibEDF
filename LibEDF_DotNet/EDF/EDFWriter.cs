@@ -41,14 +41,17 @@ namespace LibEDF_DotNet
             Console.WriteLine("Writer position after header: " + BaseStream.Position);
             Console.WriteLine("Writing signals.");
             //foreach (var sig in edf.Signals) WriteSignal(sig);
-            //int fsample = edf.Header.NumberOfSamplesInDataRecord/edf.Header.DurationOfDataRecord
+            //int fsample = edf.Header.NumberOfSamplesInDataRecord.Value/edf.Header.DurationOfDataRecord.Value
             Console.WriteLine("Write position before signal: " + this.BaseStream.Position);
-            for (int iRecord = 0; iRecord < edf.Header.NumberOfDataRecords; iRecord++)
+            for (int iRecord = 0; iRecord < edf.Header.NumberOfDataRecords.Value; iRecord++)
             {
+                Console.WriteLine("Write record  " + (iRecord+1).toString() + " / " edf.Header.NumberOfSamplesInDataRecordtoString());
                 foreach (var signal in edf.Signals) 
                 {
-                    chunk_signal = signal.Samples.Skip(iRecord*edf.Header.NumberOfSamplesInDataRecord).Take(edf.Header.NumberOfSamplesInDataRecord).ToArray()
-                    foreach (short sample in chunk_signal) this.Write(BitConverter.GetBytes(sample);
+                    for(int i = iRecord*edf.Header.NumberOfDataRecords.Value; i < (iRecord+1)*edf.Header.NumberOfDataRecords.Value; i++) 
+                    {
+                        this.Write(BitConverter.GetBytes(signal.Samples[i]);
+                    }
                 }
             }
             Console.WriteLine("Write position after signal: " + this.BaseStream.Position);
